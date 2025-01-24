@@ -1,0 +1,47 @@
+
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: CustomJob
+name: status-poller
+description: Poll the status
+
+inputs:
+  some-arg:
+    description: Example parameter
+    required: false
+
+outputs:
+  result:
+    description: Final status of the job
+    value: ${{ handlers.poll.outputs.result }}
+
+handlers:
+  init:
+    uses: docker://alpine:3.21
+    command: /bin/sh
+    args: -c "set -eu; echo \"init $ARG\"; echo -n \"init:$ARG\" > $CLOUDBEES_OUTPUTS/state"
+    env:
+      ARG: ${{ inputs.some-arg }}
+
+  poll:
+    uses: docker://alpine:3.21
+    command: /bin/sh
+    args: |
+      -c "
+        set -eu;
+        echo \"poll `date` with arg '$ARG' and init state '${{ handlers.init.outputs.state }}'\";
+        STATE=\"`wget -qO - https://raw.githubusercontent.com/mgoltzsche/testing/refs/heads/main/state.txt`\";
+        echo \"  external system state: $STATE\";
+        echo \"$STATE\" > $CLOUDBEES_OUTPUTS/result;
+        STATUS=STARTED;
+        if [ \"$STATE\" = succeeded ]; then STATUS=SUCCEEDED; fi;
+        if [ \"$STATE\" = failed ];    then STATUS=FAILED; fi;
+        printf '{\"status\":\"%s\"}' $STATUS > $CLOUDBEES_STATUS;
+      "
+    env:
+      ARG: ${{ inputs.some-arg }}
+    interval-minutes: 10
+
+  cancel:
+    uses: docker://alpine:3.21
+    command: /bin/sh
+    args: -c "echo cancel"
