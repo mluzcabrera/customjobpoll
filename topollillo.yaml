@@ -29,7 +29,7 @@ handlers:
       -c "
         set -eu;
         echo \"poll `date` with arg '$ARG' and init state '${{ handlers.init.outputs.state }}'\";
-        STATE=\"`wget -qO - https://raw.githubusercontent.com/mgoltzsche/testing/refs/heads/main/state.txt`\";
+        STATE=\"`wget -qO - https://raw.githubusercontent.com/mluzcabrera/customjobpoll/refs/heads/main/state.txt`\";
         echo \"  external system state: $STATE\";
         echo \"$STATE\" > $CLOUDBEES_OUTPUTS/result;
         STATUS=STARTED;
@@ -39,7 +39,7 @@ handlers:
       "
     env:
       ARG: ${{ inputs.some-arg }}
-    interval-minutes: 10
+    interval-minutes: 1
 
   cancel:
     uses: docker://alpine:3.21
