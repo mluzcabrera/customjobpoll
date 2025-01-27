@@ -39,7 +39,7 @@ handlers:
       "
     env:
       ARG: ${{ inputs.some-arg }}
-    interval-minutes: 10
+    interval-minutes: 2
 
   cancel:
     uses: docker://alpine:3.21
