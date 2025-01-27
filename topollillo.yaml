@@ -30,7 +30,7 @@ handlers:
         set -eu;
         echo \"poll `date` with arg '$ARG' and init state '${{ handlers.init.outputs.state }}'\";
         STATE=\"`wget -qO - https://raw.githubusercontent.com/mluzcabrera/customjobpoll/refs/heads/main/status.txt`\";
-        echo \" `date` external system state: $STATE\";
+        echo \"  external system state: $STATE\";
         echo \"$STATE\" > $CLOUDBEES_OUTPUTS/result;
         STATUS=STARTED;
         if [ \"$STATE\" = succeeded ]; then STATUS=SUCCEEDED; fi;
