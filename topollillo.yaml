@@ -1,4 +1,3 @@
-
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: CustomJob
 name: status-poller
