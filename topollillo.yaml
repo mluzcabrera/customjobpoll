@@ -8,6 +8,11 @@ inputs:
     description: Example parameter
     required: false
 
+secrets:
+  asecret:
+    description: Example secret
+    required: false  
+
 outputs:
   result:
     description: Final status of the job
