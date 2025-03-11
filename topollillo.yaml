@@ -22,9 +22,10 @@ handlers:
   init:
     uses: docker://alpine:3.21
     command: /bin/sh
-    args: -c "set -eu; echo \"init $ARG\"; echo -n \"init:$ARG\" > $CLOUDBEES_OUTPUTS/state"
+    args: -c "set -eu; echo \"init $ARG\"; echo -n \"init:$ARG $SEC\" > $CLOUDBEES_OUTPUTS/state"
     env:
       ARG: ${{ inputs.some-arg }}
+      SEC: ${{ secrets.asecret }}
 
   poll:
     uses: docker://alpine:3.21
